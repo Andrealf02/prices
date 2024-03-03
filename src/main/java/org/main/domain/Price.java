@@ -2,7 +2,6 @@ package org.main.domain;
 
 import jakarta.persistence.*;
 import org.main.application.PriceDTO;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.List;
