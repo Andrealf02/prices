@@ -1,4 +1,4 @@
-package org.main.infraestructure;
+package org.main.infrastructure;
 
 import org.main.application.PriceDTO;
 import org.main.domain.ConsultPricesUseCase;
@@ -10,24 +10,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/price")
 public class PriceController {
 
     private final ConsultPricesUseCase consultPricesUseCase;
-    private PriceDTO priceDTO;
 
+    @Autowired
     public PriceController(ConsultPricesUseCase consultPricesUseCase) {
         this.consultPricesUseCase = consultPricesUseCase;
     }
 
     @GetMapping
-    public ResponseEntity<PriceDTO> consultarPrecio(
+    public ResponseEntity<List<PriceDTO>> consultarPrecio(
             @RequestParam("date") LocalDateTime date,
             @RequestParam("productId") Long productId,
             @RequestParam("brandId") Long brandId) {
 
-        return ResponseEntity.ok(priceDTO);
+        List<PriceDTO> prices = consultPricesUseCase.consultPrices(date, productId, brandId);
+
+        return ResponseEntity.ok(prices);
     }
 }
