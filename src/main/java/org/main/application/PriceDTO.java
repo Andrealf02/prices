@@ -11,7 +11,6 @@ public class PriceDTO {
     private double price;
     private String currency;
 
-
     public Long getProductId() {
         return productId;
     }

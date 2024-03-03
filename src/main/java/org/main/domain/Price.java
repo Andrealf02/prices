@@ -12,13 +12,8 @@ import java.util.stream.Collectors;
 @Table(name = "price")
 public class Price {
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "uuid", nullable = false)
-    private Long uuid;
-
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "product_id")
@@ -41,16 +36,6 @@ public class Price {
 
     @Column(name = "currency")
     private String currency;
-
-    public Long getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(Long uuid) {
-        this.uuid = uuid;
-    }
-
-    // Constructor, getters y setters
 
     public PriceDTO toDTO() {
         PriceDTO dto = new PriceDTO();
