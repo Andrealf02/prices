@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -22,8 +21,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PriceControllerTest {
-    private MockMvc mockMvc;
-
 
     @Mock
     private ConsultPricesUseCase consultPricesUseCase;
@@ -32,8 +29,8 @@ class PriceControllerTest {
     private PriceController priceController;
 
     @Test
-    void testConsultPrice_Success() {
-        LocalDateTime date = LocalDateTime.now();
+    void testGetPrice_Success() {
+        LocalDateTime applicationDate = LocalDateTime.now();
         Long productId = 1L;
         Long brandId = 1L;
 
@@ -42,25 +39,24 @@ class PriceControllerTest {
         when(consultPricesUseCase.consultPrices(any(LocalDateTime.class), any(Long.class), any(Long.class)))
                 .thenReturn(expectedPrices);
 
-        ResponseEntity<List<PriceDTO>> response = priceController.consultarPrecio(date, productId, brandId);
+        ResponseEntity<PriceDTO> response = priceController.getPrice(applicationDate, productId, brandId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedPrices, response.getBody());
+        assertEquals(expectedPrices.get(0), response.getBody());
     }
 
     @Test
-    void testConsultPrice_Error() {
-        LocalDateTime date = LocalDateTime.now();
+    void testGetPrice_Error() {
+        LocalDateTime applicationDate = LocalDateTime.now();
         Long productId = 1L;
         Long brandId = 1L;
 
         when(consultPricesUseCase.consultPrices(any(LocalDateTime.class), any(Long.class), any(Long.class)))
                 .thenThrow(new ConsultPricesException("Test error", new Throwable()));
 
-
-        ResponseEntity<List<PriceDTO>> response = priceController.consultarPrecio(date, productId, brandId);
+        ResponseEntity<PriceDTO> response = priceController.getPrice(applicationDate, productId, brandId);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals(Collections.emptyList(), response.getBody());
+        assertEquals(null, response.getBody());
     }
 }

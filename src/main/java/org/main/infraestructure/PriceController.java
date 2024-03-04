@@ -28,17 +28,17 @@ public class PriceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PriceDTO>> consultarPrecio(
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
+    public ResponseEntity<PriceDTO> getPrice(
+            @RequestParam("applicationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime applicationDate,
             @RequestParam("productId") Long productId,
             @RequestParam("brandId") Long brandId) {
-
         try {
-            List<PriceDTO> prices = consultPricesUseCase.consultPrices(date, productId, brandId);
-            return ResponseEntity.ok(prices);
+            List<PriceDTO> prices = consultPricesUseCase.consultPrices(applicationDate, productId, brandId);
+            PriceDTO selectedPrice = prices.stream().findFirst().orElse(null);
+            return ResponseEntity.ok(selectedPrice);
         } catch (ConsultPricesException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.emptyList());
+                    .body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
